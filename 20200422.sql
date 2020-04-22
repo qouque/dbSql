@@ -124,7 +124,7 @@ FROM emp;
 
 
 REG_DT컬럼이 NULL일 경우 현재 날짜가 속한 월의 마지막 일자로 표현
-SELECT userid, user, reg_dt,
+SELECT userid, usernm, reg_dt,
        NVL(reg_dt, LAST_DAY(SYSDATE)) AS NVL
 FROM users;
 
