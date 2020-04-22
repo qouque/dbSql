@@ -1,3 +1,88 @@
+페이징 처리
+    . ROWNUM 
+    . INLINE-VIEW(오라클 한정)
+    . 페이징 공식
+    . 바인드 변수
+    
+
+함수 : 로직을 모듈화 한 코드
+ ==> 실제 사용(호출)하는 곳과 함수가 구현되어있는 부분을 분리 ==> 유지보수의 편이성을 도모
+ 함수를 사용하지 않을경우
+  호출하는 부분에 함수 코드를 직접 기술해야 하므로, 코드가 길어진다 ==> 가독성이 나빠진다
+  
+오라클 함수를 구분
+입력 구분 : 
+  . signle row function 
+  . multi row function
+  
+제작자 구분:
+ . 내장 함수 : 오라클에서 제공해주는 함수
+ . 사용자 정의 함수 : 개발자가 직접 정의한 함수(pl/sql배울 때)
+ 
+
+프로그래밍언어, 식별이름 부여....중요한 원칙 
+ 
+DUAL TABLE
+SYS 계정에 속해 있는 테이블
+오라클의 모든 사용자가 공통으로 사용할 수 있는 테이블
+
+한개의 행, 하나의 컬럼(dummy)-값은 'X';
+
+사용 용도
+1. 함수를 테스트할 목적
+2. merge 구문
+3. 데이터 복제
+
+
+오라클 내장 함수 테스트 (대소문자 관련)
+LOWER, UPPER, INITCAP : 인자로 문자열 하나를 받는다;
+
+SELECT LOWER('Hello, World'), UPPER('Hello, World'), INITCAP('hello, world')
+FROM dual;
+
+SELECT empno, 5, 'test', LOWER('Hello, World') /*, UPPER('Hello, World'), INITCAP('hello, world')*/
+FROM emp;
+
+
+함수는 where절에서도 사용이 가능하다
+emp 테이블의 SMITH 사원의 이름은 대문자로 저장되어 있음
+
+SELECT *
+FROM emp
+WHERE LOWER(ename) = 'smith'; 이런식으로 작성하면 안된다
+WHERE ename = UPPER('smith'); 두가지 방식중에는 위에보다는 아래방식이 올바른 방식이다
+==> WHERE ename = 'SMITH';  두가지 방식중에는 위에보다는 아래방식이 올바른 방식이다
+
+WHERE ename = 'smith'; 테이블에는 데이터 값이 대문자로 저장되어 있으므로 조회건수 0
+WHERE ename = 'SMITH'; 정상 실행
+
+
+문자열 연산 함수
+CONCAT : 2개의 문자열을 입력으로 받아, 결합한 문자열을 반환한다
+
+SELECT CONCAT('start', 'end')
+FROM dual;
+
+SELECT table_name, tablespace_name, /*CONCAT('start', 'end'),
+       CONCAT(table_name, tablespace_name),
+       'SELECT * FROM ' || table_name || ';',*/
+       CONCAT(CONCAT('SELECT * FROM ', table_name), ';')
+FROM user_tables;
+
+
+SUBSTR(문자열, 시작 인덱스, 종료 인덱스) : 문자열의 시작인덱스 부터....종료인덱스 까지의 부분 문자열
+시작인덱스는 1부터 (*java의 경우는 0부터)
+
+LENGTH(문자열) : 문자열의 길이를 반환
+
+INSTR(문자열, 찾을 문자열, [검색 시작 인덱스]) :
+                    문자열에서 찾을 문자열이 존재하는지, 존재할 경우  찾을 문자열의 인덱스(위치) 반환
+                    
+LPAD, RPAD(문자열, 맞추고 싶은 전체 문자열 길이, [패딩 문자열 - 기본 값은 공백])
+
+TRIM(문자열) : 문자열의 앞 뒤의 존재하는 공백을 제거, 문자열 중간에 있는 공백은 제거 대상이 아님
+
+REPLACE(문자열, 검색할 문자열, 변경할  문자열) : 문자열에서 검색할 문자열 찾아 변경할 문자열 변경로 변경
 SELECT SUBSTR('Hello, World', 1, 5) sub, 
        LENGTH('Hello, World') len,
        INSTR('Hello, World', 'o') ins,
