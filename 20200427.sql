@@ -170,6 +170,20 @@ FROM emp JOIN dept USING (deptno)
 WHERE emp.sal > 2500;
 
 JOIN0_3~4 °úÁ¦]
+--3
+SELECT emp.empno, emp.ename, emp.sal, emp.deptno, dept.dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+  AND (emp.sal > 2500
+  AND emp.empno >7600);
+
+--4
+SELECT emp.empno, emp.ename, emp.sal, emp.deptno, dept.dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+  AND (emp.sal > 2500
+  AND emp.empno >7600)
+  AND dept.dname = 'RESEARCH';
 
 SELECT *
 FROM emp, dept
